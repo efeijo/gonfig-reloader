@@ -1,22 +1,36 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"gonfigreloader/cmd/config"
-	"gonfigreloader/pkg/yaml"
-	"log/slog"
 	"os"
+	"time"
+
+	"gonfigreloader/cmd/config"
+	"gonfigreloader/internal/reloader"
+	"gonfigreloader/pkg/loader"
+	"gonfigreloader/pkg/watcher"
 )
 
 func main() {
 	f, err := os.Getwd()
-	loader := yaml.NewYamlLoader(f+"/cmd/config/config.yaml", &config.Config{})
-	err = loader.Load()
-
 	if err != nil {
-		slog.Error("error:", err)
-		os.Exit(1)
+		return
 	}
-	fmt.Println(loader.ConfigFile)
+	configFilePath := f + "/cmd/config/config.yaml"
+
+	c := &config.Config{}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	loader := loader.NewLoader(loader.Yaml, configFilePath, c)
+	fileWatcher := watcher.NewFileWatcher(configFilePath)
+	reloader.NewReloader(ctx, loader, fileWatcher)
+
+	ticker := time.NewTicker(time.Second)
+	for {
+		<-ticker.C
+		fmt.Println(c)
+	}
 
 }

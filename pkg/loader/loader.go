@@ -12,7 +12,7 @@ type Loader interface {
 	Load() error
 }
 
-func NewLoader(loaderType LoaderType, pathToFile string, configStruct map[string]any) Loader {
+func NewLoader(loaderType LoaderType, pathToFile string, configStruct any) Loader {
 
 	switch loaderType {
 	case Yaml:
