@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "google.golang.org/grpc/examples/proto/pinger";
+
+
+package pinger;
+
+
+message PingRequest{}
+
+message PingResponse{
+    string port = 1;
+}
+
+service Pinger{
+    rpc Ping (PingRequest) returns (PingResponse){};
+}

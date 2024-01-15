@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"gonfigreloader/cmd/config"
-	"gonfigreloader/internal/reloader"
 	"gonfigreloader/pkg/loader"
+	"gonfigreloader/pkg/reloader"
 	"gonfigreloader/pkg/watcher"
 )
 
